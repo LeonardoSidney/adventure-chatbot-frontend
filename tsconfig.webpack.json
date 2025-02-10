@@ -1,0 +1,15 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "jsx": "react-native",
+    "noEmit": false,
+    "allowImportingTsExtensions":false,
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
