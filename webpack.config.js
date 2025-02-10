@@ -1,10 +1,17 @@
+'use strict';
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const autoprefixer = require('autoprefixer');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: './index.web.js',
+  entry: [
+    './index.web.js',
+    './src/scss/styles.scss',
+    './node_modules/bootstrap/dist/js/bootstrap.esm.min.js'
+  ],
   module: {
     rules: [
       {
@@ -25,7 +32,31 @@ module.exports = {
             options: {
               configFile: 'tsconfig.webpack.json'
             }
+          }
+        ]
+      },
+      {
+        test: /\.(scss)$/,
+        use: [
+          {
+            loader: 'style-loader'
           },
+          {
+            loader: 'css-loader'
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  autoprefixer
+                ]
+              }
+            }
+          },
+          {
+            loader: 'sass-loader'
+          }
         ]
       }
     ]
@@ -35,6 +66,11 @@ module.exports = {
       'react-native$': 'react-native-web',
     },
     extensions: ['.web.js', '.js', '.jsx', '.ts', '.tsx']
+  },
+  devServer: {
+    static: path.resolve(__dirname, 'dist'),
+    port: 8080,
+    hot: true
   },
   output: {
     filename: 'app.js',
@@ -48,5 +84,10 @@ module.exports = {
     new InterpolateHtmlPlugin({
       PUBLIC_URL: 'static'
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'public/locales', to: 'locales' }
+      ]
+    })
   ],
 };
